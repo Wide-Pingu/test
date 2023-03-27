@@ -1,0 +1,43 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: export
+spec:
+  template:
+    spec:
+      containers:
+      - command:
+        - sh
+        - -c
+        - /script_chapeau.sh
+        env:
+        - name: GLOBAL_RIGHTS_DATABASE_ID
+          value: c8d87376e06b4d73ad30298b3f63beeb
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: GITHUB_TOKEN
+              name: githubsecret
+
+        - name: NOTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: NOTION_KEY
+              name: notionsecret
+
+        - name: SPECIFIC_RIGHT_DEMO_DATABASE_ID
+          value: 1ce6922db1d04b0cb01c0e6d69ee18e3
+        - name: SPECIFIC_RIGHT_FORMATION_DATABASE_ID
+          value: 2a8cea723c2b42ed98c49d7c7cabde5d
+        - name: SPECIFIC_RIGHT_PROD_DATABASE_ID
+          value: d2556f97e2aa498d815fa863c83b3a19
+        - name: SPECIFIC_RIGHT_STAGING_DATABASE_ID
+          value: 56132c8af42940fc8b78575eae728c94
+        image: exportops
+        imagePullPolicy: Never
+        name: export-ops-right
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      restartPolicy: Never
+  backoffLimit: 4
