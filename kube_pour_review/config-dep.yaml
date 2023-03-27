@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: salut
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 3
+  selector:
+    matchLabels:
+      app: salut
+  template:
+    metadata:
+      labels:
+        app: salut
+    spec:
+      containers:
+      - command:
+        - sh
+        - -c
+        - printenv  && echo salut, valeur du github token = $GITHUB_TOKEN . Valeur d une variable d env = $GLOBAL_RIGHTS_DATABASE_ID  && sleep 1000
+        envFrom:
+        - secretRef:
+            name: githubsecret
+        - secretRef:
+            name: notionsecret
+        image: busybox
+        imagePullPolicy: Always
+        name: busybox
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+

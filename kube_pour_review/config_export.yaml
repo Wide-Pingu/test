@@ -1,0 +1,18 @@
+apiVersion: v1
+data:
+  GLOBAL_RIGHTS_DATABASE_ID: dummy value
+
+  PATH_TO_GET_CSV_GLOBAL_RIGHTS_KEYCLOAK: /keycloak_export_helpers/getCSVFromGlobalOpsRightsFromKeycloak.sh
+  PATH_TO_GET_CSV_GLOBAL_RIGHTS_NOTION: /keycloak_export_helpers/getCSVFromGlobalOpsRightsFromNotion.sh
+  PATH_TO_GET_CSV_SPECIFIC_RIGHTS_KEYCLOAK: /keycloak_export_helpers/getCSVFromSpecificOpsRightsFromKeycloak.sh
+  PATH_TO_GET_CSV_SPECIFIC_RIGHTS_NOTION: /keycloak_export_helpers/getCSVFromSpecificOpsRightsFromNotion.sh
+
+  SPECIFIC_RIGHT_DEMO_DATABASE_ID: dummy value
+  SPECIFIC_RIGHT_FORMATION_DATABASE_ID: dummy value
+  SPECIFIC_RIGHT_PROD_DATABASE_ID: dummy value
+  SPECIFIC_RIGHT_STAGING_DATABASE_ID: dummy value
+kind: ConfigMap
+metadata:
+  name: env-map
+  namespace: default
+  uid: ab30bb41-9407-49fd-9ead-625545c31210
