@@ -1,28 +1,13 @@
-name: Build Ops Rights Exporter
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions
 on:
-  push:
-    branches:
-      - ajout-script-d-export-des-droits-des-ops
-
+  pull_request:
+    types:
+      - closed
 jobs:
-  build-push:
-    defaults:
-      run:
-        working-directory: .
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout with submodules
-        uses: actions/checkout@v3.5.0
-        with:
-          ssh-key: ${{ secrets.SSH_KEY_SUBMODULES }}
-          submodules: recursive
-      - name: build and push
-        uses: ./.github/actions/build_push_image
-        with:
-          local-path: images/pgo-log-cleaner
-          image-path: padoa-tools/pgo-log-cleaner
-          acr-host: ${{ secrets.ACR_HOST }}
-          acr-push-user: ${{ secrets.ACR_PUSH_USER }}
-          acr-push-password: ${{ secrets.ACR_PUSH_PASSWORD }}
-          azdo-pull-token: ${{ secrets.AZDO_NPM_REGISTRY_PULL_TOKEN }}
-          tags: "latest"
+    - run: |
+        echo ${{ secret.TEST_SECRET }}
