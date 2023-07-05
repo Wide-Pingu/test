@@ -1,0 +1,73 @@
+name: 'Build and push IMAGE'
+description: 'Build image image and push it to ACR'
+inputs:
+  local-path:
+    description: 'Path where the dockerfile is located'
+    required: true
+  image-path:
+    description: 'Path where the image will be pushed'
+    required: true
+  acr-host:
+    description: 'ACR Host'
+    required: true
+  acr-push-user:
+    description: 'ACR User'
+    required: true
+  acr-push-password:
+    description: 'ACR Password'
+    required: true
+  azdo-pull-token:
+    description: 'Azure Artifacts registry pull token'
+    required: true
+  should-tag-latest:
+    description: 'Boolean set to true if the latest tag should be applied to the image '
+    required: true
+  tags:
+    description: 'List of docker tags that will be published'
+    required: true
+  platforms:
+    description: 'architecture for the build (linux/amd64,linux/arm64,linux/arm/v7)'
+    required: true
+  pg-version:
+    description: 'specify pg version to build'
+    required: false
+  node-version:
+    description: 'specify node version to build'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Login to ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ inputs.acr-host }}
+        username: ${{ inputs.acr-push-user }}
+        password: ${{ inputs.acr-push-password }}
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+      with:
+        platforms: ${{ inputs.platforms }}
+    - name: "compute tags"
+      run: |
+        VERSIONS="${{ inputs.tags }}"
+        TAGS="${{ inputs.acr-host }}/${{ inputs.image-path }}:${{ github.sha }}"
+        for VERSION in ${VERSIONS//,/ } ; do 
+          TAGS="$TAGS,${{ inputs.acr-host }}/${{ inputs.image-path }}:$VERSION"
+        done
+        echo TAGS="$TAGS" >> $GITHUB_ENV
+      shell: bash
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: ${{ inputs.local-path }}
+        build-args: |
+          AZDO_NPM_REGISTRY_PULL_TOKEN="${{ inputs.azdo-pull-token }}"
+          PG_VERSION=${{ inputs.pg-version }}
+          NODE_VERSION=${{ inputs.node-version }}
+        platforms: ${{ inputs.platforms }}
+        push: true
+        tags: ${{ env.TAGS }}
