@@ -4,7 +4,7 @@ on:
   push:
 jobs:
   echo:
-    if: ${{ github.ref_name == "main" }}
+    if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
     - run: |
