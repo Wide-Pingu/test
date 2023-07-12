@@ -4,14 +4,13 @@ on:
   push:
 jobs:
   if_main:
-    if: github.ref_name == 'main'
+
     runs-on: ubuntu-latest
     steps:
     - run: |
         echo 'Latest ' ${{ github.ref_name }}
-  if_not_main:
-    if: github.ref_name != 'main'
-    runs-on: ubuntu-latest
-    steps:
+      if: github.ref_name == 'main'
     - run: |
-        echo 'Other' ${{  github.ref_name }}
+        echo 'Other ' ${{ github.ref_name }}
+      if: github.ref_name != 'main'
+
