@@ -4,8 +4,7 @@ on:
   push:
 
 jobs:
-  if_push_on_main_build_image:
-  if: github.ref_name == 'main'
+  build-push:
     defaults:
       run:
         working-directory: .
@@ -16,7 +15,7 @@ jobs:
         with:
           ssh-key: ${{ secrets.SSH_KEY_SUBMODULES }}
           submodules: recursive
-      - name: build and push
+      - name: build and push with tag latest
         uses: ./.github/actions/build_push_image
         with:
           local-path: .
@@ -26,19 +25,8 @@ jobs:
           acr-push-password: ${{ secrets.ACR_PUSH_PASSWORD }}
           azdo-pull-token: ${{ secrets.AZDO_NPM_REGISTRY_PULL_TOKEN }}
           tags: "latest"
-  if_push_on_other_branch_build_image:
-  if: github.ref_name == 'main'
-    defaults:
-      run:
-        working-directory: .
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout with submodules
-        uses: actions/checkout@v3.5.0
-        with:
-          ssh-key: ${{ secrets.SSH_KEY_SUBMODULES }}
-          submodules: recursive
-      - name: build and push
+        if: github.ref_name == 'main'
+      - name: build and push with branch name as tag
         uses: ./.github/actions/build_push_image
         with:
           local-path: .
@@ -47,5 +35,8 @@ jobs:
           acr-push-user: ${{ secrets.ACR_PUSH_USER }}
           acr-push-password: ${{ secrets.ACR_PUSH_PASSWORD }}
           azdo-pull-token: ${{ secrets.AZDO_NPM_REGISTRY_PULL_TOKEN }}
-          tags: ${{  github.ref_name }}
+          tags: ${{ github.ref_name }}
+        if: github.ref_name != 'main'
+        
+
           
