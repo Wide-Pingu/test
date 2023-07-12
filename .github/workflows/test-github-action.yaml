@@ -3,8 +3,15 @@ run-name: ${{ github.actor }} is learning GitHub Actions
 on:
   push:
 jobs:
-  echo:
+  if_main:
+    if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
     - run: |
-        echo ${{ github.ref_name }}
+        echo 'Latest ' ${{ github.ref_name }}
+  if_not_main:
+    if: github.ref_name != 'main'
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo 'Other' ${{  github.ref_name }}
