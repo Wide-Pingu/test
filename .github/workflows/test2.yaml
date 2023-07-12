@@ -1,9 +1,11 @@
 name: Build Ops Rights Exporter
+run-name: Build image after push by ${{ github.actor }} on ${{ github.ref_name }}
 on:
   push:
 
 jobs:
   if_push_on_main_build_image:
+  if: github.ref_name == 'main'
     defaults:
       run:
         working-directory: .
@@ -25,6 +27,7 @@ jobs:
           azdo-pull-token: ${{ secrets.AZDO_NPM_REGISTRY_PULL_TOKEN }}
           tags: "latest"
   if_push_on_other_branch_build_image:
+  if: github.ref_name == 'main'
     defaults:
       run:
         working-directory: .
