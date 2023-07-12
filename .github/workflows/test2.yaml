@@ -1,11 +1,9 @@
 name: Build Ops Rights Exporter
 on:
   push:
-    branches:
-      -ajout-script-d-export-des-droits-des-ops
 
 jobs:
-  build-push:
+  if_push_on_main_build_image:
     defaults:
       run:
         working-directory: .
@@ -26,3 +24,25 @@ jobs:
           acr-push-password: ${{ secrets.ACR_PUSH_PASSWORD }}
           azdo-pull-token: ${{ secrets.AZDO_NPM_REGISTRY_PULL_TOKEN }}
           tags: "latest"
+  if_push_on_other_branch_build_image:
+    defaults:
+      run:
+        working-directory: .
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with submodules
+        uses: actions/checkout@v3.5.0
+        with:
+          ssh-key: ${{ secrets.SSH_KEY_SUBMODULES }}
+          submodules: recursive
+      - name: build and push
+        uses: ./.github/actions/build_push_image
+        with:
+          local-path: .
+          image-path: padoa-tools/ops-right-exporter
+          acr-host: ${{ secrets.ACR_HOST }}
+          acr-push-user: ${{ secrets.ACR_PUSH_USER }}
+          acr-push-password: ${{ secrets.ACR_PUSH_PASSWORD }}
+          azdo-pull-token: ${{ secrets.AZDO_NPM_REGISTRY_PULL_TOKEN }}
+          tags: ${{  github.ref_name }}
+          
