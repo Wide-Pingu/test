@@ -19,4 +19,4 @@ jobs:
                  -s $ARGO_SERVER \ 
                  --token $ARGO_TOKEN \
                  --from workflowtemplate/workflow-template-ops-rights-exporter-rights-by-env \
-                 -v
+                 -v '
