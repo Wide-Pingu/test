@@ -2,7 +2,7 @@ name: Test1
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   check_pr_description:
