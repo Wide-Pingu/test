@@ -2,6 +2,8 @@ name: argo-workflow
 run-name: Launching argo-workflow
 on:
   push:
+    branches:
+      - rien
 jobs:
   job_name:
     runs-on: ubuntu-latest
