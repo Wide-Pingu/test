@@ -8,5 +8,5 @@ jobs:
   check_pr_description:
     runs-on: ubuntu-22.04
     steps:
-      - name: Set up Python
+      - name: it worked
         run: echo "test"
