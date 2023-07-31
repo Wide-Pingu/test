@@ -5,6 +5,8 @@ on:
       - main
     paths:
       - test/*
+      - test/*/*
+
 
 jobs:
   check_pr_description:
