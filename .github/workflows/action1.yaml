@@ -1,0 +1,20 @@
+name: Test1
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  check_pr_description:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Check PR description
+        run: |
+          title=$(jq -r '.pull_request.title' ${{ github.event_path }})
+          body=$(jq -r '.pull_request.body' ${{ github.event_path }})
+          python .github/scripts/pr_linter.py "$title" "$body"
