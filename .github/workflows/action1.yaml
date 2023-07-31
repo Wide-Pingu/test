@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - test/*
 
 jobs:
   check_pr_description:
